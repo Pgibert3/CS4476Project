@@ -94,8 +94,9 @@ Twelve markers from the ARUCO 6x6 dictionary were randomly chosen.
 <img style="height: 325px;" alt="" src="visualizations/markers.png">
 </div>
 <p align="center">Marker Creation</p>
+<br><br>
 
-In this section, we calibrated the camera using a series of images captured in a video. 
+We then calibrated the camera using a series of images captured in a video. 
 We used a chessboard calibrated the camera as the distinct black and white squares make for easy identification. 
 We continuously moved the camera around until the camera had captured 30 distinct images of the chessboard. 
 Finally, we passed the image and points from the identified chessboard into Open CV's camera callibration method, 
@@ -104,22 +105,33 @@ which solved for the camera matrix and the distortion matrix uses a linear least
 <img style="height: 150px;" alt="" src="visualizations/callibrationMatrix.png">
 </div>
 where f<sub>x</sub> and f<sub>y</sub> are focal lengths and c<sub>x</sub> and c<sub>y</sub> are camera centers.
- 
+Markers were randomly oriented and placed on a sheet of paper which is displayed below.
 <div style="text-align: center;">
 <img style="height: 325px;" alt="" src="visualizations/placedMarkers.png">
 </div>
 <p align="center">Marker Placement</p>
+<br><br>
   
+The markers were identified using ARUCO's detectMarkers function. 
+This function takes and image and dictionary of markers as input and returns a list of the identified markers and the associated locations in the image. 
+It did this by first identifying square-shaped objects in the image using adaptive thresholding and 
+then rotating the image four times to see if any of its alignments match a predefined marker. 
 <div style="text-align: center;">
 <img style="height: 325px;" alt="" src="visualizations/markerIdentification.png">
 </div>
 <p align="center">Marker Identification</p>
+<br><br>
 
+Finally, we computed approximate pose estimated using the previously calibrated camera. 
+Using ARUCO's estimatePoseSingleMarkers function we computed the pose estimation by minimizing 
+the reprojection error amongst the image corners given the camera and distortion matrices. 
+Using our old markers image, we drew the APE estimations with the help of ARUCO's drawAxis function. 
 <div style="text-align: center;">
 <img style="height: 325px;" alt="" src="visualizations/AproxPoseEst.png">
 </div>
 <p align="center">Approximate Pose Estimation</p>  
-  
+<br><br>
+
 <h4>Inter-frame Corner Tracking</h4>
 <h4>Dense Pose Refinement</h4>
 
