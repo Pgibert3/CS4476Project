@@ -85,6 +85,46 @@ A successful project consists of implementing and verifying Oculus’s research 
 
 <br><br>
 
+<!-- Project 1 Update -->
+<h3>Project 1 Update</h3>
+<h4>Approximate Pose Estimation</h4>
+
+Twelve markers from the ARUCO 6x6 dictionary were randomly chosen.
+<div style="text-align: center;">
+<img style="height: 325px;" alt="" src="markers.png">
+</div>
+<p align="center">Marker Creation</p>
+
+In this section, we calibrated the camera using a series of images captured in a video. 
+We used a chessboard calibrated the camera as the distinct black and white squares make for easy identification. 
+We continuously moved the camera around until the camera had captured 30 distinct images of the chessboard. 
+Finally, we passed the image and points from the identified chessboard into Open CV's camera callibration method, 
+which solved for the camera matrix and the distortion matrix uses a linear least squares solution to the problem 
+<div style="text-align: center;">
+<img style="height: 150px;" alt="" src="callibrationMatrix.png">
+</div>
+where f<sub>x</sub> and f<sub>y</sub> are focal lengths and c<sub>x</sub> and c<sub>y</sub> are camera centers.
+ 
+<div style="text-align: center;">
+<img style="height: 325px;" alt="" src="exampleImage.jpeg">
+</div>
+<p align="center">Marker Placement</p>
+  
+<div style="text-align: center;">
+<img style="height: 325px;" alt="" src="exampleImage.jpeg">
+</div>
+<p align="center">Marker Identification</p>
+
+<div style="text-align: center;">
+<img style="height: 325px;" alt="" src="exampleImage.jpeg">
+</div>
+<p align="center">Approximate Pose Estimation</p>  
+  
+<h4>Inter-frame Corner Tracking</h4>
+<h4>Dense Pose Refinement</h4>
+
+<br><br>
+  
 <!-- Main Results Figure --> 
 <div style="text-align: center;">
 <img style="height: 300px;" alt="" src="results.jpeg">
@@ -93,6 +133,11 @@ A successful project consists of implementing and verifying Oculus’s research 
 
 <!-- Results -->
 <h3>Qualitative results</h3>
+----
+<br><br>
+ 
+<!-- Conclusion and Future Work -->
+<h3>Conclusion and Future Work</h3>
 ----
 <br><br>
 
@@ -122,3 +167,4 @@ A successful project consists of implementing and verifying Oculus’s research 
 <br><br>
 
 </body></html>
+
