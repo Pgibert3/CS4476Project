@@ -136,62 +136,47 @@ Using our old markers image, we drew the APE estimations with the help of ARUCO'
 <h4>Dense Pose Refinement</h4>
 <div>
   <div>
-    <p>
-      Dense pose refinement (DPR) proved to be more difficult than initially expected due to some ambiguity in the source paper.
-      Much of this boiled down to the exact meaning of “appearance distance” which we now understand refers to a delta in pixel color/intensity rather than a physical distance between pixels.
-      Due to this initial misunderstanding, much of our work on DPR so far has been research and thus we do not yet have significant experimental results from this phase of the pipeline.
-    </p>
-    <p>
-      The overarching idea of DPR is to create a “dense alignment” which projects every pixel of the arUco markers onto the image plane, not just the single point describing the marker’s position relative to the stylus (this being what makes it “dense”).
-      This dense alignment is then used to minimize the difference in intensity between the projected object points in the image and their corresponding point in the reference arUco markers. 
-    </p>
+    Dense pose refinement (DPR) proved to be more difficult than initially expected due to some ambiguity in the source paper.
+    Much of this boiled down to the exact meaning of “appearance distance” which we now understand refers to a delta in pixel color/intensity rather than a physical distance between pixels.
+    Due to this initial misunderstanding, much of our work on DPR so far has been research and thus we do not yet have significant experimental results from this phase of the pipeline.
+    <br><br>
+    The overarching idea of DPR is to create a “dense alignment” which projects every pixel of the arUco markers onto the image plane, not just the single point describing the marker’s position relative to the stylus (this being what makes it “dense”).
+    This dense alignment is then used to minimize the difference in intensity between the projected object points in the image and their corresponding point in the reference arUco markers. 
   </div>
-
+  <br>
   <div>
-    <p>
-      The following grayscale images demonstrate a change of perspective accompanied with a change in observed intensity values.
-      The intensity of the top left most black pixel is used, however the boxes are enlarged for visualization.
-    </p>
+    The following grayscale images demonstrate a change of perspective accompanied with a change in observed intensity values.
+    The intensity of the top left most black pixel is used, however the boxes are enlarged for visualization.
     <div style="text-align: center;">
-    <img style="height: 325px;" alt="" src="visualizations/dpr/intensity_60.png">
-    <img style="height: 325px;" alt="" src="visualizations/dpr/intensity_30.png">
+      <img style="height: 325px;" alt="" src="visualizations/dpr/intensity_60.png">
+      <img style="height: 325px;" alt="" src="visualizations/dpr/intensity_30.png">
     </div>
-    <p>
-      The ground-truth intensity for that pixel would be full black (255).
-      To reduce the impact of lighting when working with several visible markers with different poses, intensity is normalized per marker.
-      The exact normalization method has not yet been explicitly defined.
-    </p>
+    The ground-truth intensity for that pixel would be full black (255).
+    To reduce the impact of lighting when working with several visible markers with different poses, intensity is normalized per marker.
+    The exact normalization method has not yet been explicitly defined.
   </div>
-
+  <br>
   <div>
-    <p>
-      The algorithm for minimizing appearance distances is set up as a nonlinear least squares problem that resembles APE.
-    </p>
+    The algorithm for minimizing appearance distances is set up as a nonlinear least squares problem that resembles APE.
     <div style="text-align: center;">
       <img src="visualizations/dpr/eq_4.png">
     </div>
-    <p>
-      However the Gauss Newton algorithm is used instead of Levenberg–Marquardt. Backtracking line search is used when the non-linear Gauss Newton iteration does not converge.
-    </p>
+    However the Gauss Newton algorithm is used instead of Levenberg–Marquardt. Backtracking line search is used when the non-linear Gauss Newton iteration does not converge.
   </div>
-
+  <br>
   <div>
-    <p>
-      DPR is a much higher resolution alignment than APE which makes it computationally expensive.
-      The pose determined by APE serves as an initial guess which should help significantly.
-      Due to the binary nature of the markers, the algorithm can be further optimized by ignoring “flat” regions of the image where intensity does not change.
-      An arUco marker is shown below along with a corresponding mask.
-      The gray regions are ignored such that only the edges between white and black regions are used for dense alignment. 
-    </p>
+    DPR can be seen as a much higher resolution alignment than APE, which makes it computationally expensive.
+    The pose determined by APE serves as an initial guess which will help significantly.
+    Due to the binary nature of the markers, the algorithm is further optimized by ignoring “flat” regions of the image where intensity does not change.
+    An arUco marker is shown below along with an example mask.
+    The gray regions are the mask and are ignored, resulting in only the edges between white and black regions being used for dense alignment. 
 
     <div style="text-align: center;">
       <img style="height: 325px;" alt="" src="visualizations/dpr/dpr_example_marker.png">
       <img style="height: 325px;" alt="" src="visualizations/dpr/dpr_mask.png">
     </div>
 
-    <p>
-      These masks are precomputed for each marker and do not change.
-    </p>
+    These masks are precomputed for each marker and do not change.
   </div>
 </div>
 
