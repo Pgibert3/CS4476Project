@@ -144,6 +144,32 @@ A successful project consists of implementing and verifying Oculus’s research 
 
 <h4>Inter-frame Corner Tracking</h4>
   
+<div>
+  <div>
+    To test the second stage of the pipeline, 
+    we partially implemented the LK pyramidal optical flow tracker in Python3, 
+    but ran a full optical flow experiment using OpenCV. 
+    The final project will build upon this test experiment to implement the second stage of the stylus tracking pipeline.
+  </div>
+  <div>
+    To compute pyramidal optical flow between images I and J we minimize the equation
+  </div>
+  <div style="text-align: center;">
+    <img style="height: 325px;" alt="" src="visualizations/minimizationEquation.png">
+  </div>
+  <br><br>
+  <div>
+    over a (wx+1)×(wy+1) sized image window centered on a feature located at point u.
+  </div>
+  <div>
+    The pyramidal algorithm propagates guesses for d by performing the minimization 
+    on resampling of the original image from a low resolution to the original resolution.
+  </div> 
+  <div style="text-align: center;">
+    <img style="height: 325px;" alt="" src="visualizations/InterFrameCornTrack.png">
+    <p align="center">Figure ?. OpenCV velocity vectors from LK pyramidal tracker</p>
+  </div> 
+<div>
  
 <h4>Dense Pose Refinement</h4>
 <div>
