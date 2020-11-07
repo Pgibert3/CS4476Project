@@ -1,0 +1,3 @@
+https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_video/py_lucas_kanade/py_lucas_kanade.html
+
+https://mecaruco2.readthedocs.io/en/latest/notebooks_rst/Aruco/aruco_basics.html
