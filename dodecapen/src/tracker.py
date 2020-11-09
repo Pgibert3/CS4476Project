@@ -70,7 +70,7 @@ class Tracker:
                 for i in range(tvec.shape[0]):
                     out = cv2.aruco.drawAxis(out, camera_matrix, dist_coeffs, rvec[i], tvec[i], axis_len)
 
-                # out = aruco.drawDetectedMarkers(out, corners, ids)
+                out = aruco.drawDetectedMarkers(out, corners, ids)
 
                 cv2.imshow('frame', out)
             else:
