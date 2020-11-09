@@ -1,3 +1,7 @@
+tracker.py:
 https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_video/py_lucas_kanade/py_lucas_kanade.html
-
 https://mecaruco2.readthedocs.io/en/latest/notebooks_rst/Aruco/aruco_basics.html
+
+calibrate.py:
+https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_calib3d/py_calibration/py_calibration.html
+https://mecaruco2.readthedocs.io/en/latest/notebooks_rst/Aruco/sandbox/ludovic/aruco_calibration_rotation.html
