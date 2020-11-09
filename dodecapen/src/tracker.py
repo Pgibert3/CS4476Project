@@ -63,17 +63,13 @@ class Tracker:
             
             # TODO: implement eq 3 from paper to confine ARUCO's search region
             if ids is not None:
-                print("A")
                 rvec, tvec, obj_points = self._get_marker_poses(corners)
-                print("B")
                 camera_matrix = self.camera_params[0]
                 dist_coeffs = self.camera_params[1]
                 axis_len = self.marker_len
-                print(rvec)
-                print(rvec.shape)
                 for i in range(tvec.shape[0]):
                     out = cv2.aruco.drawAxis(out, camera_matrix, dist_coeffs, rvec[i], tvec[i], axis_len)
-                print("D")
+
                 # out = aruco.drawDetectedMarkers(out, corners, ids)
 
                 cv2.imshow('frame', out)
@@ -222,8 +218,8 @@ def demo():
     camera_params = np.load('camera_params.npy', allow_pickle=True)
     marker_len = 0.0365125
     tracker = Tracker(marker_len=marker_len, camera_params=camera_params)
-    # tracker.track_source(0)
-    tracker.track_source('../test_footage/desk.MOV')
+    tracker.track_source(0)
+    # tracker.track_source('../test_footage/desk.MOV')
 
 
 if __name__ == '__main__':
