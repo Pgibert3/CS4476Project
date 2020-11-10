@@ -23,7 +23,7 @@ class Tracker:
         self.aruco_dict = aruco_dict
 
         if aruco_params is None:
-            self.aruco_params = aruco.DetectorParameters_create()
+            self.aruco_params = aruco.DetectorParameters_create() # TODO: tune
         self.aruco_params = self.aruco_params
 
         if flow_params == None:
@@ -64,6 +64,12 @@ class Tracker:
             # TODO: implement eq 3 from paper to confine ARUCO's search region
             if ids is not None:
                 rvec, tvec, obj_points = self._get_marker_poses(corners)
+
+                # Insert dense pose stuff here
+
+
+                # drawing starts here
+
                 camera_matrix = self.camera_params[0]
                 dist_coeffs = self.camera_params[1]
                 axis_len = self.marker_len
@@ -219,7 +225,7 @@ def demo():
     marker_len = 0.0365125
     tracker = Tracker(marker_len=marker_len, camera_params=camera_params)
     tracker.track_source(0)
-    # tracker.track_source('../test_footage/desk.MOV')
+    #tracker.track_source('../test_footage/desk.MOV')
 
 
 if __name__ == '__main__':
