@@ -1,10 +1,10 @@
 import numpy as np
 import cv2
 from cv2 import aruco
-import matplotlib.pyplot as plt
 import os
 import pdb
 from calibrate import calibrate_charuco
+from plotter import Plotter
 
 
 class Tracker:
@@ -51,6 +51,7 @@ class Tracker:
         src - the value passed to cv2.VideoCapture(). 0 for webcam or str for a video file
         '''
         cap = cv2.VideoCapture(src)
+        plotter = Plotter(phy_size=(1000, 1000, 3), origin=(499,499), units='mm')
         while (cap.isOpened()):
             ret, frame = cap.read()
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -64,26 +65,31 @@ class Tracker:
             # TODO: implement eq 3 from paper to confine ARUCO's search region
             if ids is not None:
                 rvec, tvec, obj_points = self._get_marker_poses(corners)
-
                 # Insert dense pose stuff here
 
 
                 # drawing starts here
+                x = [tvec[:,0,0] * 1000]
+                y = [tvec[:,0,1] * 1000]
+                X = np.concatenate((x,y), axis=1)
+                plotter.plotshow(X)
+                
+            #     camera_matrix = self.camera_params[0]
+            #     dist_coeffs = self.camera_params[1]
+            #     axis_len = self.marker_len
+            #     for i in range(tvec.shape[0]):
+            #         out = cv2.aruco.drawAxis(out, camera_matrix, dist_coeffs, rvec[i], tvec[i], axis_len)
 
-                camera_matrix = self.camera_params[0]
-                dist_coeffs = self.camera_params[1]
-                axis_len = self.marker_len
-                for i in range(tvec.shape[0]):
-                    out = cv2.aruco.drawAxis(out, camera_matrix, dist_coeffs, rvec[i], tvec[i], axis_len)
+            #     out = aruco.drawDetectedMarkers(out, corners, ids)
 
-                out = aruco.drawDetectedMarkers(out, corners, ids)
-
-                cv2.imshow('frame', out)
+            #     cv2.imshow('frame', out)
             else:
-                cv2.imshow('frame', out)
+                plotter.show()
+            #     cv2.imshow('frame', out)
+
+
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
-        
         cap.release()
         cv2.destroyAllWindows()
 
