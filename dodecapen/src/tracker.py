@@ -5,6 +5,8 @@ import os
 import pdb
 from calibrate import calibrate_charuco
 from plotter import Plotter
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 
 
 class Tracker:
@@ -51,9 +53,16 @@ class Tracker:
         src - the value passed to cv2.VideoCapture(). 0 for webcam or str for a video file
         '''
         cap = cv2.VideoCapture(src)
-        plotter = Plotter(phy_size=(1000, 1000, 3), origin=(499,499), units='mm')
+        # plotter = Plotter(phy_size=(1000, 1000, 1000), origin=(499,499), units='mm')
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+        x = np.empty((0,))
+        y = np.empty((0,))
+        z = np.empty((0,))
         while (cap.isOpened()):
             ret, frame = cap.read()
+            if not ret:
+                break
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             corners, ids = self._detect_markers(gray)
             out = frame.copy()
@@ -69,29 +78,33 @@ class Tracker:
 
 
                 # drawing starts here
-                x = [tvec[:,0,0] * 1000]
-                y = [tvec[:,0,1] * 1000]
-                X = np.concatenate((x,y), axis=1)
-                plotter.plotshow(X)
+                x = np.append(x, [tvec[:,0,0] * 1000])
+                y = np.append(y, [tvec[:,0,1] * 1000])
+                z = np.append(z, [tvec[:,0,2] * 1000])
+                # X = np.concatenate((x,y,z), axis=1)
+                # plotter.plotshow(X)
                 
-            #     camera_matrix = self.camera_params[0]
-            #     dist_coeffs = self.camera_params[1]
-            #     axis_len = self.marker_len
-            #     for i in range(tvec.shape[0]):
-            #         out = cv2.aruco.drawAxis(out, camera_matrix, dist_coeffs, rvec[i], tvec[i], axis_len)
+                # camera_matrix = self.camera_params[0]
+                # dist_coeffs = self.camera_params[1]
+                # axis_len = self.marker_len
+                # for i in range(tvec.shape[0]):
+                #     out = cv2.aruco.drawAxis(out, camera_matrix, dist_coeffs, rvec[i], tvec[i], axis_len)
 
-            #     out = aruco.drawDetectedMarkers(out, corners, ids)
+                out = aruco.drawDetectedMarkers(out, corners, ids)
 
-            #     cv2.imshow('frame', out)
+                cv2.imshow('frame', out)
             else:
-                plotter.show()
-            #     cv2.imshow('frame', out)
-
+                # plotter.show()
+                cv2.imshow('frame', out)
 
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
         cap.release()
+        cv2.waitKey(1)
         cv2.destroyAllWindows()
+        cv2.waitKey(1)
+        ax.plot(x,y,z,c='blue')
+        plt.show()
 
 
     def _update_buffers(self, gray, corners, ids, buf_size=5):
@@ -222,6 +235,20 @@ class Tracker:
                 dist_coeffs)
         
         return rvecs, tvecs, obj_points
+    
+    def _to_pen_tip(tvec, rvecs, pen_len):
+        '''
+        converts the world coordinates of the center of a marker to the world coordinates of the pen
+        tip. Assumes basic pen/marker arangement.
+
+        Params:
+        tvecs - ???
+        rvecs - ???
+        pen_len - length of the pen in meters
+
+        Returns:
+        X - Nx3 matrix of pen tip coordinate. Each row corresponds to the x, y, z world location of the pen tip
+        '''
             
 
 def demo():
@@ -230,8 +257,8 @@ def demo():
     camera_params = np.load('camera_params.npy', allow_pickle=True)
     marker_len = 0.0365125
     tracker = Tracker(marker_len=marker_len, camera_params=camera_params)
-    tracker.track_source(0)
-    #tracker.track_source('../test_footage/desk.MOV')
+    # tracker.track_source(1)
+    tracker.track_source('../test_footage/pen.MOV')
 
 
 if __name__ == '__main__':
