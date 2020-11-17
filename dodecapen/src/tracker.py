@@ -236,14 +236,14 @@ class Tracker:
         
         return rvecs, tvecs, obj_points
     
-    def _to_pen_tip(tvec, rvecs, pen_len):
+    def _to_pen_tip(tvec, rvec, pen_len):
         '''
         converts the world coordinates of the center of a marker to the world coordinates of the pen
         tip. Assumes basic pen/marker arangement.
 
         Params:
-        tvecs - ???
-        rvecs - ???
+        tvec - ???
+        rvec - ???
         pen_len - length of the pen in meters
 
         Returns:
