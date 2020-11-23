@@ -230,40 +230,35 @@ A successful project consists of implementing and verifying Oculus’s research 
 <h3>Qualitative results</h3>
 <div>
   <div>
-    - With and without Dense Pose Refinement.
-    <br><br>
-    The overarching idea of DPR is to create a “dense alignment” which projects every pixel of the arUco markers onto the image plane, not just the single point describing the marker’s position relative to the stylus (this being what makes it “dense”).
-    This dense alignment is then used to minimize the difference in intensity between the projected object points in the image and their corresponding point in the reference arUco markers. 
+    The idea behind the experience what to use aruco to detect markers, utilizing optic flow when APE failed, to detect markers in more frames.
+    We analyzed 22 videos of the brush: 11 translation videos (brush moving left to right at different speeds) and 11 rotation videos (brush rotating at different speeds).
+    In this videos, we sought to detect how many frames we could detect markers in with both with and without optical flow.
   </div>
-  <br>
+  <div style="text-align: center;">
+    <br>
+    <img style="height: 275px;" alt="" src="visualizations/final_update/translate_screenshot.png">
+    <img style="height: 275px;" alt="" src="visualizations/final_update/comb_translate_results.jpeg">
+    <p align="center">Translation Experiment and Results</p>
+    <br>
+  </div>
   <div>
-    The following grayscale images demonstrate a change of perspective accompanied with a change in observed intensity values.
-    The intensity of the top left most black pixel is used, however the boxes are enlarged for visualization.
-    <div style="text-align: center;">
-      <br>
-      <img style="height: 275px;" alt="" src="visualizations/final_update/translate_screenshot.png">
-      <img style="height: 275px;" alt="" src="visualizations/final_update/comb_translate_results.jpeg">
-      <p align="center">Translation Experiment and Results</p>
-      <br>
-    </div>
-    <div>
-      During the horizontal translation, with less frames per trial (slower movement), Approximate Pose Estimation performed nearly the same both with and without Opitical Flow.
-      On the other hand, with greater than 50 frames per trial, Optical Flow performed significantly better. During __ frames per trail, the APE with Optic Flow detected ___ %
-      more frames.
-      These findings were supported by the results from the rotation trial, in which the brush was rotated 180 degrees forwards then backwards.
-    <div> 
-    <div style="text-align: center;">
-      <br>
-      <img style="height: 275px;" alt="" src="visualizations/final_update/rotate_screenshot.png">
-      <img style="height: 275px;" alt="" src="visualizations/final_update/comb_rotate_results.jpeg">
-      <p align="center">Rotation Experiment and Results</p>
-      <br>
-    </div>
-    <div>
-      During the rotation, with less frames per trial (slower movement), Approximate Pose Estimation performed nearly the same both with and without Opitical Flow.
-      On the other hand, with greater than 50 frames per trial, Optical Flow performed significantly better. During __ frames per trail, the APE with Optic Flow detected ___ %
-      more frames.
+    During the horizontal translation, with less frames per trial (slower movement), Approximate Pose Estimation produced same results both with and without Opitical Flow.
+    On the other hand, with greater than 50 frames per trial, Optical Flow performed significantly better. During __ frames per trail, the APE with Optic Flow detected ___ %
+    more frames.
+    These findings were supported by the results from the rotation trial, in which the brush was rotated 180 degrees forwards then backwards.
+  <div> 
+  <div style="text-align: center;">
+    <br>
+    <img style="height: 275px;" alt="" src="visualizations/final_update/rotate_screenshot.png">
+    <img style="height: 275px;" alt="" src="visualizations/final_update/comb_rotate_results.jpeg">
+    <p align="center">Rotation Experiment and Results</p>
+    <br>
   </div>
+  <div>
+    Similar to translation, during trials with a smaller amount of frame, Approximate Pose Estimation performed similarly with and without Opitical Flow.
+    On the other hand, with greater than 100 frames per trial, Optical Flow performed significantly better. During __ frames per trail, the APE with Optic Flow detected ___ %
+    more frames.
+</div>
 </div>
 <br><br>
  
