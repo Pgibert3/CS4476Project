@@ -246,9 +246,23 @@ A successful project consists of implementing and verifying Oculus’s research 
       <p align="center">Translation Experiment and Results</p>
       <br>
     </div>
-    The ground-truth intensity for that pixel would be full black (255).
-    To reduce the impact of lighting when working with several visible markers with different poses, intensity is normalized per marker.
-    The exact normalization method has not yet been explicitly defined.
+    <div>
+      During the horizontal translation, with less frames per trial (slower movement), Approximate Pose Estimation performed nearly the same both with and without Opitical Flow.
+      On the other hand, with greater than 50 frames per trial, Optical Flow performed significantly better. During __ frames per trail, the APE with Optic Flow detected ___ %
+      more frames.
+      These findings were supported by the results from the rotation trial, in which the brush was rotated 180 degrees forwards then backwards.
+    <div> 
+    <div style="text-align: center;">
+      <br>
+      <img style="height: 275px;" alt="" src="visualizations/final_update/rotate_screenshot.png">
+      <img style="height: 275px;" alt="" src="visualizations/final_update/comb_rotate_results.jpeg">
+      <p align="center">Rotation Experiment and Results</p>
+      <br>
+    </div>
+    <div>
+      During the rotation, with less frames per trial (slower movement), Approximate Pose Estimation performed nearly the same both with and without Opitical Flow.
+      On the other hand, with greater than 50 frames per trial, Optical Flow performed significantly better. During __ frames per trail, the APE with Optic Flow detected ___ %
+      more frames.
   </div>
 </div>
 <br><br>
