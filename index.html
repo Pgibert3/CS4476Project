@@ -44,10 +44,9 @@ Please see <a href="http://vision.cs.utexas.edu/projects/adapted_attributes/">th
 
 <!-- Goal -->
 <h3>Abstract</h3>
-
-  
-The goal of this project is to implement and further evaluate a novel method for tracking the pose of a passive stylus, originally proposed by Oculus Researchers for use in VR/AR settings. 
-(One or two sentences on the motivation behind the problem you are solving. One or two sentences describing the approach you took. One or two sentences on the main result you obtained.)
+The recent boom in AR/VR applications is giving way to many unique tracking problems in computer vision, particularly those that are framed around passive components. 
+This project analyzes the effectivity of enhancing ArUco marker tracking with an optic flow, based on a passive stylus tracking application proposed by Oculus researchers. 
+We show that optic flow can be used to detect markers throughout more frames than just AruCo alone.
 <br><br>
 <!-- figure -->
 <h3>Teaser figure</h3>
@@ -60,7 +59,12 @@ The goal of this project is to implement and further evaluate a novel method for
 <br><br>
 <!-- Introduction -->
 <h3>Introduction</h3>
-The goal of this project is to implement and further evaluate a novel method for tracking the pose of a passive stylus, originally proposed by Oculus Researchers for use in VR/AR settings [1]. The input to the system is a single camera feed from a standard quality camera of a user operating a stylus with a 3D-printed dodecahedron fixed to its top. By tracking special symbols on the surface of the dodecahedron, the system outputs the time-series pose of the stylus’s tip, which is used to reconstruct what the user is writing or drawing. We seek to both implement the Oculus paper and evaluate tracking different geometries for the shape affixed to the top of the stylus.
+A growing demand in AR/VR applications has pushed researchers in computer vision fields to explore many new problems, particularly object tracking. 
+Whether the desired object to track is a game controller, stylus, or hand there is desire across many industries not only for accuracy, but also a passive system.
+In 2020 Oculus experimented with hand tracking in place of controllers and officially implemented the feature in a release of their Oculus Quest 2 virtual reality headset (https://tech.fb.com/making-technology-feel-natural/). 
+In addition, Oculus published a tracking system that combined ArUco markers with optic flow and dense pose alignment to estimate the pose of a passive pen (https://research.fb.com/wp-content/uploads/2017/09/uist2017_pen.pdf). 
+This project builds off Oculus’s work in the former by bringing part of their system out of C++ and into a Python environment. 
+We also use it to track an arbitrary passive object by combining AruCo markers and optic flow.
 
 <br><br>
 <!-- Approach -->
