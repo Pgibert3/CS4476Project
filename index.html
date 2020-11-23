@@ -67,15 +67,27 @@ We also use it to track an arbitrary passive object by combining AruCo markers a
 <br><br>
 <!-- Approach -->
 <h3>Approach</h3>
-The stylus will be constructed by affixing a 3D printed dodecahedron to a common ballpoint pen with glue. Tracking symbols will be printed and also glued to the surface of the dodecahedron.
+Two AruCo markers are affixed to an arbitrary object; we chose a comb and squares markers of side length 3.65cm. 
+The comb is then translated and rotated between 2 defined points in front of a fixed iphone camera at different speeds. 
+The goal is to successfully determine the pose of as many markers in as many frames as possible. 
+Given a frame, we first convert it to grayscale, and use AruCo to guess the image coordinates of the marker corners. 
+If AruCo fails to detect a given marker m, we turn to optic flow. If the marker was successfully detected in the previous frame, 
+we use OpenCV’s LK pyramidal optic flow algorithm to compute the flow of the marker corners from the previous frame to determine the corners of the undetected marker in the current frame. 
+This algorithm minimizes the following equation:
 
-The Oculus paper outlines a three-stage system for tracking the pose of the dodecahedron, and thus the orientation and position of the pen tip. First, we will use the ArUco library [2] to perform Approximate Pose Estimation (APE) on the decahedron and obtain a pose p of the tracking symbols on the decahedron. We then continue to minimize the reprojection error between the projected and observed image points according to the L2 difference. As described in the paper, this creates a PnP problem that the researchers recommend minimizing using the Levenberg-Marquardt method.
+[Insert equation]
 
-The paper notes that motion blur may result in APE failing. In stage two of the system, we check for the success of APE, and on failure, attempt an additional tracking method called Inter-frame Corner Tracking (ICT), as done in the paper. We will implement this from scratch in C++ according to the pyramidal LK optical flow tracking algorithm used in the Oculus paper [3]. This algorithm down samples the image, propagating optical flow guesses from the lowest resolution samples of the image up to the original resolution image using the Lucas-Kanade method.
+After calibrating the camera with a ChArUco board we are able to determine the pose of each marker.
 
-In stage three, the system uses dense alignment as a means for further improving the accuracy of the pose of the stylus. Additional dodecahedron calibration and pen-tip calibration are also used to refine the pose estimation. The dodecahedron is calibrated by taking photos of each tracking symbol to derive its pose relative to the dodecahedron, while the pen-tip is calibrated by empirically considering the displacement of the center of the ball tip from the center of the dodecahedron in world space.
+[Insert image of markers with poses on them as the y are being rotated/translated]
 
-
+We faced many lab setup restrictions due to COVID thus had trouble maintaining control variables as well as we would like. 
+For example, the comb was translated and rotated by hand. 
+One way we countered this was by basing our metrics only on the number of frames that objected existed in between the start and finish points, 
+and made the assumption that an object that took less frames to reach the ending point was moving faster. 
+We also had no way of measuring the true precision of the tracker so instead we made our measure for accuracy binary: 
+either the fit “was close enough” or it was rejected. We used AruCo’s and OpenCV’s built in standards for “good fits” for simplicity.
+ 
 <br><br>
 <!-- Results -->
 <h3>Experiments and results</h3>
