@@ -126,22 +126,12 @@ A successful project consists of implementing and verifying Oculus’s research 
   <div>
     Markers were randomly oriented and placed on a sheet of paper which is displayed below.
   </div>   
-  <div style="text-align: center;">
-    <img style="height: 325px;" alt="" src="visualizations/placedMarkers.png">
-    <p align="center">Marker Placement</p>
-  </div>
-  <br><br>
   <div>
     The markers were identified using ARUCO's detectMarkers function. 
     This function takes and image and dictionary of markers as input and returns a list of the identified markers and the associated locations in the image. 
     It did this by first identifying square-shaped objects in the image using adaptive thresholding and 
     then rotating the image four times to see if any of its alignments match a predefined marker. 
   </div> 
-  <div style="text-align: center;">
-    <img style="height: 325px;" alt="" src="visualizations/markerIdentification.png">
-    <p align="center">Marker Identification</p>
-   </div>
-  <br><br>
   <div>
     Finally, we computed approximate pose estimated using the previously calibrated camera. 
     Using ARUCO's estimatePoseSingleMarkers function we computed the pose estimation by minimizing 
