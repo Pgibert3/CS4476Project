@@ -228,7 +228,26 @@ A successful project consists of implementing and verifying Oculus’s research 
 
 <!-- Results -->
 <h3>Qualitative results</h3>
-----
+<div>
+  <div>
+    - With and without Dense Pose Refinement.
+    <br><br>
+    The overarching idea of DPR is to create a “dense alignment” which projects every pixel of the arUco markers onto the image plane, not just the single point describing the marker’s position relative to the stylus (this being what makes it “dense”).
+    This dense alignment is then used to minimize the difference in intensity between the projected object points in the image and their corresponding point in the reference arUco markers. 
+  </div>
+  <br>
+  <div>
+    The following grayscale images demonstrate a change of perspective accompanied with a change in observed intensity values.
+    The intensity of the top left most black pixel is used, however the boxes are enlarged for visualization.
+    <div style="text-align: center;">
+      <img style="height: 325px;" alt="" src="visualizations/final_update/comb_translate_results.jpeg">
+      <img style="height: 325px;" alt="" src="visualizations/final_update/translate_screenshot.png">
+    </div>
+    The ground-truth intensity for that pixel would be full black (255).
+    To reduce the impact of lighting when working with several visible markers with different poses, intensity is normalized per marker.
+    The exact normalization method has not yet been explicitly defined.
+  </div>
+</div>
 <br><br>
  
 <!-- Conclusion and Future Work -->
