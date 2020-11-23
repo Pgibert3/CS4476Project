@@ -91,14 +91,9 @@ either the fit “was close enough” or it was rejected. We used AruCo’s and 
 <br><br>
 <!-- Results -->
 <h3>Experiments and results</h3>
-We will use the ArUco library in addition to implementing our own tracking and calibration algorithms in C++. We plan to implement the shell of the stylus tracking system as described the Oculus paper [1], the pyramidal LK optical flow tracking algorithm referenced in the Oculus paper [3], and the necessary dense alignment and calibration systems outlined in the Oculus paper.
-
-We will build our own dataset by filming ourselves drawing with the stylus and scanning the ink result into a digital representation. We will conduct four experiments, each experiment consisting of a single drawing that is filmed from at least three different angles. The system’s accuracy is measured by comparing the scanned drawing to the predicted movement of the stylus. Each experiment will be repeated for two different shapes other than a decahedron, each having less than twelve faces.
-
-A successful project consists of implementing and verifying Oculus’s research by being able to predict the path of the stylus, reasonably reproduce the original drawing, and analyzing the impact of different tracking shapes on the system’s accuracy. As a bonus, it would be of interest to see if our system could be optimized for real-time tracking. We expect that Oculus’s research is accurate and that the stylus is reliably trackable. We also hypothesize that any shape with fewer than twelve faces will be notably harder to track resulting in a decrease in accuracy. On the contrary, if we show that reducing face count does not hurt accuracy, we would have found a great simplification to the physical construction of the stylus.
-
-<br><br>
-
+We used the ArUco library in addition to implementing our own tracking and calibration algorithms in Python. We implemented the shell of the stylus tracking system as described the Oculus paper [1] and the pyramidal LK optical flow tracking algorithm referenced in the Oculus paper [3].
+We built our own dataset by filming ourselves moving the Aruco markers. We conducted ___ experiments, each experiment consisting of ____. 
+The system’s accuracy is measured by comparing the marker detection with and without optical flow.
 <!-- Final Project Update -->
 <h4>Approximate Pose Estimation</h4>
 <div>
@@ -125,14 +120,10 @@ A successful project consists of implementing and verifying Oculus’s research 
   </div> 
   <div>
     Markers were randomly oriented and placed on a sheet of paper which is displayed below.
-  </div>   
-  <div>
     The markers were identified using ARUCO's detectMarkers function. 
     This function takes and image and dictionary of markers as input and returns a list of the identified markers and the associated locations in the image. 
     It did this by first identifying square-shaped objects in the image using adaptive thresholding and 
     then rotating the image four times to see if any of its alignments match a predefined marker. 
-  </div> 
-  <div>
     Finally, we computed approximate pose estimated using the previously calibrated camera. 
     Using ARUCO's estimatePoseSingleMarkers function we computed the pose estimation by minimizing 
     the reprojection error amongst the image corners given the camera and distortion matrices. 
@@ -261,7 +252,8 @@ A successful project consists of implementing and verifying Oculus’s research 
     Similar to translation, during trials with a smaller amount of frame, Approximate Pose Estimation performed similarly with and without Opitical Flow.
     On the other hand, with greater than 100 frames per trial, Optical Flow performed significantly better. During __ frames per trail, the APE with Optic Flow detected ___ %
     more frames.
-</div>
+    MAYBE ADD COMPARISION BETWEEN ROTATION AND TRANSLATION.
+  </div>
 </div>
 <br><br>
  
