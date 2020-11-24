@@ -4,9 +4,6 @@ from cv2 import aruco
 import os
 import pdb
 from calibrate import calibrate_charuco
-from plotter import Plotter
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
 
 
 class Tracker:
@@ -33,7 +30,7 @@ class Tracker:
                     winSize = (15,15),
                     maxLevel = 2,
                     criteria = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 0.03)
-                    ) # TODO: tune flow parameters according to the paper
+                    )
         self.flow_params = flow_params
 
         self.marker_len = marker_len
@@ -45,66 +42,76 @@ class Tracker:
         self.ids_buf = []
         
 
-    def track_source(self, src):
+    def track_source(self, src, output=None, useflow=True, wait=1):
         '''
         Tracks aruco markers for a video source
 
         Params:
         src - the value passed to cv2.VideoCapture(). 0 for webcam or str for a video file
         '''
+        det_markers = 0
+        det_frames = 0
+        tot_frames = 0
+
         cap = cv2.VideoCapture(src)
-        # plotter = Plotter(phy_size=(1000, 1000, 1000), origin=(499,499), units='mm')
-        fig = plt.figure()
-        ax = fig.add_subplot(111, projection='3d')
-        x = np.empty((0,))
-        y = np.empty((0,))
-        z = np.empty((0,))
+        vout = None
+        if output is not None:
+            width = int(cap.get(3)) 
+            height = int(cap.get(4))
+            size = (int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)),
+                    int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT)))
+            fps = 15
+            vout = cv2.VideoWriter()
+            ret = vout.open(output, cv2.VideoWriter_fourcc(*'MJPG'), fps, size, True)
+            if not ret:
+                raise Exception("VideoWriter failed to open")
+
         while (cap.isOpened()):
             ret, frame = cap.read()
             if not ret:
                 break
-            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-            corners, ids = self._detect_markers(gray)
             out = frame.copy()
-            if self._did_ape_fail(ids):
-                corners, ids = self._find_more_corners(gray, corners, ids, out=out)
-
-            self._update_buffers(gray, corners, ids)
+            rvec, tvec, obj_points, corners, ids, out = self.track_frame(frame, useflow=useflow, out=out)
             
-            # TODO: implement eq 3 from paper to confine ARUCO's search region
+            # draw
             if ids is not None:
-                rvec, tvec, obj_points = self._get_marker_poses(corners)
-                # Insert dense pose stuff here
-
-
-                # drawing starts here
-                x = np.append(x, [tvec[:,0,0] * 1000])
-                y = np.append(y, [tvec[:,0,1] * 1000])
-                z = np.append(z, [tvec[:,0,2] * 1000])
-                # X = np.concatenate((x,y,z), axis=1)
-                # plotter.plotshow(X)
-                
-                # camera_matrix = self.camera_params[0]
-                # dist_coeffs = self.camera_params[1]
-                # axis_len = self.marker_len
-                # for i in range(tvec.shape[0]):
-                #     out = cv2.aruco.drawAxis(out, camera_matrix, dist_coeffs, rvec[i], tvec[i], axis_len)
-
-                out = aruco.drawDetectedMarkers(out, corners, ids)
-
-                cv2.imshow('frame', out)
+                out = self._draw_marker_poses(out, rvec, tvec)
+                out = self._draw_marker_frames(out, corners, ids)
+                det_markers += ids.shape[0]
+                det_frames += 1
+    
+            if vout is not None:
+                vout.write(out)
             else:
-                # plotter.show()
-                cv2.imshow('frame', out)
+                cv2.imshow('Tracker', cv2.resize(out, (out.shape[1]//3, out.shape[0]//3)))  
 
-            if cv2.waitKey(1) & 0xFF == ord('q'):
+            tot_frames += 1
+            
+            if cv2.waitKey(wait) & 0xFF == ord('q'):
                 break
+
         cap.release()
         cv2.waitKey(1)
+        if vout:
+            vout.release()
+            cv2.waitKey(1)
         cv2.destroyAllWindows()
         cv2.waitKey(1)
-        ax.plot(x,y,z,c='blue')
-        plt.show()
+
+        return det_markers, det_frames, tot_frames
+
+
+    def _draw_marker_poses(self, img, rvec, tvec):
+        camera_matrix = self.camera_params[0]
+        dist_coeffs = self.camera_params[1]
+        axis_len = self.marker_len / 2
+        for i in range(tvec.shape[0]):
+            img = cv2.aruco.drawAxis(img, camera_matrix, dist_coeffs, rvec[i], tvec[i], axis_len)
+        return img
+
+
+    def _draw_marker_frames(self, img, corners, ids):
+        return aruco.drawDetectedMarkers(img, corners, ids)
 
 
     def _update_buffers(self, gray, corners, ids, buf_size=5):
@@ -119,6 +126,20 @@ class Tracker:
             self.gray_buf.pop(0)
             self.corners_buf.pop(0)
             self.ids_buf.pop(0)
+
+
+    def track_frame(self, frame, useflow=False, out=None):
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        corners, ids = self._detect_markers(gray)
+        if useflow and self._did_ape_fail(ids):
+            corners, ids, out = self._find_more_corners(gray, corners, ids, out=out)
+        if useflow:
+            self._update_buffers(gray, corners, ids)
+        
+        rvec, tvec, obj_points = None, None, None
+        if ids is not None:
+            rvec, tvec, obj_points = self._get_marker_poses(corners)
+        return rvec, tvec, obj_points, corners, ids, out
 
 
     def _detect_markers(self, gray):
@@ -159,22 +180,20 @@ class Tracker:
         ids - A Nx1 list of ids of each marker. The n-th id corresponds to the corners[n] corner positions
         '''
         if ids is None:
-            return None, None
+            return None, None, out
 
         if len(self.gray_buf) == 0:
             # cannot compute optical flow without history in the buffers
-            return corners, ids
+            return corners, ids, out
 
         if self.ids_buf[-1] is None:
             # cannot compute optical flow if the last frame contains zero found markers
-            return corners, ids
+            return corners, ids, out
         
         prev_ids = self.ids_buf[-1]
-
         if ids is None:
             corners = []
             ids = np.empty((0,1))
-
         for pid in prev_ids: # loop for all of the markers found last frame
             if pid not in ids: # if it was not found this frame, compute flow
                 p0 = self._get_p0(pid, -1)
@@ -186,8 +205,8 @@ class Tracker:
                     # add the new find to the corners and ids arrays
                     corners.append(valid_p1[np.newaxis, :, :])
                     ids = np.concatenate((ids, [pid]))
-        
-        return corners, ids
+
+        return corners, ids, out
     
 
     def _get_p0(self, pid, buf_index):
@@ -215,13 +234,14 @@ class Tracker:
         p1 - the set of marker corners from this frame
         st - the status return value from cv2.calcOpticalFlowPyrLK()
         '''
+
         valid_p1 = p1[st==1]
         valid_p0 = p0[st==1]
         for i in range(valid_p0.shape[0]):
             start = tuple(valid_p0[i,:].astype(np.int))
             end = tuple(valid_p1[i,:].astype(np.int))
             color = (255, 0, 255) # pink
-            thickness = 2
+            thickness = 10
             img = cv2.arrowedLine(img, start, end, color, thickness)
         return img
 
@@ -257,8 +277,8 @@ def demo():
     camera_params = np.load('camera_params.npy', allow_pickle=True)
     marker_len = 0.0365125
     tracker = Tracker(marker_len=marker_len, camera_params=camera_params)
-    # tracker.track_source(1)
-    tracker.track_source('../test_footage/pen.MOV')
+    # tracker.track_source(0)
+    tracker.track_source('../test_footage/paul.MOV', wait=0)
 
 
 if __name__ == '__main__':
